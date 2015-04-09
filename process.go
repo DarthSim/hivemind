@@ -1,8 +1,6 @@
 package main
 
 import (
-	"bytes"
-	"fmt"
 	"os/exec"
 	"sync"
 	"syscall"
@@ -15,16 +13,12 @@ type Process struct {
 	Color int
 }
 
-func NewProcess(name, command string, color int) (proc *Process) {
-	proc = &Process{
+func NewProcess(name, command string, color int) *Process {
+	return &Process{
 		exec.Command("/bin/sh", "-c", command),
 		name,
 		color,
 	}
-
-	multiterm.PipeOutput(proc)
-
-	return
 }
 
 func (p *Process) Running() bool {
@@ -35,17 +29,18 @@ func (p *Process) Run(wg *sync.WaitGroup) {
 	wg.Add(1)
 	defer wg.Done()
 
+	multiterm.PipeOutput(p)
+	defer multiterm.ClosePipe(p)
+
 	if err := p.Cmd.Run(); err != nil {
-		multiterm.FlushToStdout(p, bytes.NewBufferString(
-			fmt.Sprintf("\033[1;31m%v\033[0m\n", err),
-		))
+		multiterm.WriteErr(p, err)
 	}
 }
 
 func (p *Process) Term() {
 	if p.Running() {
 		if err := p.Process.Signal(syscall.SIGTERM); err != nil {
-			p.Stderr.Write([]byte(err.Error()))
+			multiterm.WriteErr(p, err)
 		}
 	}
 }
