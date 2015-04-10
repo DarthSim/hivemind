@@ -3,7 +3,6 @@ package main
 import (
 	"bufio"
 	"log"
-	"os"
 	"regexp"
 )
 
@@ -13,15 +12,9 @@ type ProcfileEntry struct {
 }
 
 func parseProcfile(path string) (entries []ProcfileEntry) {
-	file, err := os.Open(path)
-	if err != nil {
-		log.Fatal(err)
-	}
-	defer file.Close()
-
 	re, _ := regexp.Compile("^(\\w+):\\s+(.+)$")
 
-	scanner := bufio.NewScanner(file)
+	scanner := bufio.NewScanner(config.Procfile)
 	for scanner.Scan() {
 		if len(scanner.Text()) > 0 {
 			params := re.FindStringSubmatch(scanner.Text())

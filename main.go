@@ -18,7 +18,7 @@ func main() {
 	var procs []*Process
 
 	color := 32
-	port := 5000
+	port := config.PortBase
 
 	for _, entry := range parseProcfile("Procfile") {
 		procs = append(
@@ -31,7 +31,7 @@ func main() {
 		)
 
 		color++
-		port += 100
+		port += config.PortStep
 	}
 
 	var procWg sync.WaitGroup

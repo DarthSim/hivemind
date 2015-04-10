@@ -1,1 +1,2 @@
 gom "github.com/kr/pty"
+gom "gopkg.in/alecthomas/kingpin.v1"
