@@ -1,7 +1,6 @@
 package main
 
 import (
-	"log"
 	"os"
 	"path/filepath"
 
@@ -35,9 +34,5 @@ func init() {
 	}
 
 	config.Root, err = filepath.Abs(config.Root)
-	if err != nil {
-		log.Fatal(err)
-	}
-
-	log.Print(config)
+	fatalOnErr(err)
 }

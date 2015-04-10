@@ -2,7 +2,6 @@ package main
 
 import (
 	"bufio"
-	"log"
 	"regexp"
 )
 
@@ -19,7 +18,7 @@ func parseProcfile(path string) (entries []ProcfileEntry) {
 		if len(scanner.Text()) > 0 {
 			params := re.FindStringSubmatch(scanner.Text())
 			if len(params) < 2 {
-				log.Fatal("Invalid process format: ", scanner.Text())
+				fatal("Invalid process format: ", scanner.Text())
 			}
 
 			entries = append(entries, ProcfileEntry{
@@ -29,12 +28,10 @@ func parseProcfile(path string) (entries []ProcfileEntry) {
 		}
 	}
 
-	if err := scanner.Err(); err != nil {
-		log.Fatal(err)
-	}
+	fatalOnErr(scanner.Err())
 
 	if len(entries) == 0 {
-		log.Fatal("No entries was found in Procfile")
+		fatal("No entries was found in Procfile")
 	}
 
 	return

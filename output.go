@@ -4,7 +4,6 @@ import (
 	"bufio"
 	"bytes"
 	"fmt"
-	"log"
 	"os"
 	"sync"
 	"syscall"
@@ -26,9 +25,7 @@ var multiterm = Multiterm{}
 
 func (m *Multiterm) openPipe(proc *Process) (pipe *PtyPipe) {
 	pty, tty, err := pty.Open()
-	if err != nil {
-		log.Fatal(err)
-	}
+	fatalOnErr(err)
 
 	pipe = &PtyPipe{pty, tty}
 
