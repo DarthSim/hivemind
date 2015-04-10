@@ -13,12 +13,16 @@ type Process struct {
 	Color int
 }
 
-func NewProcess(name, command string, color int) *Process {
-	return &Process{
+func NewProcess(name, command string, color int) (proc *Process) {
+	proc = &Process{
 		exec.Command("/bin/sh", "-c", command),
 		name,
 		color,
 	}
+
+	proc.Dir = config.Root
+
+	return
 }
 
 func (p *Process) Running() bool {
