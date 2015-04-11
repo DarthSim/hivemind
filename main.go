@@ -37,7 +37,7 @@ func main() {
 	var procWg sync.WaitGroup
 
 	for _, proc := range procs {
-		go proc.Run(&procWg)
+		proc.Run(&procWg)
 	}
 
 	waitForKill()
