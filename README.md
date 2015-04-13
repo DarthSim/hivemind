@@ -34,13 +34,13 @@ worker: bundle exec sidekiq
 assets: gulp watch
 ```
 
-To get started you just need to run Hivemind from your working directory.
+To get started you just need to run Hivemind from your working directory containing Procfile.
 
 ```bash
 $ hivemind
 ```
 
-If Procfile isn't located in your working directory^ you can specify it:
+If Procfile isn't located in your working directory, you can specify it:
 
 ```bash
 $ hivemind path/to/your/Procfile
