@@ -2,6 +2,10 @@
 
 Hivemind is a tool for running processes of development environment. At the moment it supports Linux, FreeBSD and Mac OS X.
 
+<a href="https://evilmartians.com/?utm_source=hivemind">
+<img src="https://evilmartians.com/badges/sponsored-by-evil-martians.svg" alt="Sponsored by Evil Martians" width="236" height="54">
+</a>
+
 ## Installation
 
 You need Go to build the project.
