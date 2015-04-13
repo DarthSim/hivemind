@@ -43,3 +43,13 @@ $ hivemind path/to/your/Procfile
 ```
 
 Run `hivemind --help` to see other options.
+
+## Author
+
+Sergey "DarthSim" Aleksandrovich
+
+## License
+
+Hivemind is licensed under the MIT license.
+
+See LICENSE for the full license text.
