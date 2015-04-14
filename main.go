@@ -8,15 +8,7 @@ import (
 	"sync"
 )
 
-func waitForKill() {
-	c := make(chan os.Signal, 1)
-	signal.Notify(c, os.Interrupt, os.Kill)
-	<-c
-}
-
-func main() {
-	var procs []*Process
-
+func createProcesses() (procs []*Process) {
 	color := 32
 	port := config.PortBase
 
@@ -34,17 +26,50 @@ func main() {
 		port += config.PortStep
 	}
 
+	return
+}
+
+func interrupted() chan os.Signal {
+	c := make(chan os.Signal)
+	signal.Notify(c, os.Interrupt, os.Kill)
+	return c
+}
+
+func detectExit(done chan bool) {
+	for {
+		var exit bool
+
+		select {
+		case <-done:
+			exit = config.ExitTogether
+		case <-interrupted():
+			exit = true
+		}
+
+		if exit {
+			break
+		}
+	}
+}
+
+func main() {
 	var procWg sync.WaitGroup
 
-	for _, proc := range procs {
-		proc.Run(&procWg)
-	}
+	procs := createProcesses()
 
-	waitForKill()
+	done := make(chan bool, len(procs))
 
 	for _, proc := range procs {
-		proc.Term()
+		proc.Run(&procWg, done)
 	}
+
+	go func() {
+		detectExit(done)
+
+		for _, proc := range procs {
+			proc.Term()
+		}
+	}()
 
 	procWg.Wait()
 }
