@@ -1,6 +1,7 @@
 package main
 
 import (
+	"os"
 	"os/exec"
 	"sync"
 	"syscall"
@@ -50,7 +51,13 @@ func (p *Process) Run(wg *sync.WaitGroup, done chan bool) {
 func (p *Process) Term() {
 	go func() {
 		if p.Running() {
-			if err := p.Process.Signal(syscall.SIGTERM); err != nil {
+			group, err := os.FindProcess(-p.Process.Pid)
+			if err != nil {
+				multiterm.WriteErr(p, err)
+				return
+			}
+
+			if err = group.Signal(syscall.SIGINT); err != nil {
 				multiterm.WriteErr(p, err)
 			}
 		}
