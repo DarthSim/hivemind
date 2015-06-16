@@ -9,9 +9,10 @@ import (
 )
 
 type Hivemind struct {
-	procs  []*Process
-	procWg sync.WaitGroup
-	done   chan bool
+	procs       []*Process
+	procWg      sync.WaitGroup
+	done        chan bool
+	interrupted chan os.Signal
 }
 
 func NewHivemind() (h *Hivemind) {
@@ -41,10 +42,15 @@ func (h *Hivemind) createProcesses() {
 	return
 }
 
-func (h *Hivemind) interrupted() chan os.Signal {
-	c := make(chan os.Signal)
-	signal.Notify(c, os.Interrupt, os.Kill)
-	return c
+func (h *Hivemind) runProcess(proc *Process) {
+	h.procWg.Add(1)
+
+	go func() {
+		defer h.procWg.Done()
+		defer func() { h.done <- true }()
+
+		proc.Run(&h.procWg, h.done)
+	}()
 }
 
 func (h *Hivemind) waitForExit() {
@@ -54,31 +60,34 @@ func (h *Hivemind) waitForExit() {
 		select {
 		case <-h.done:
 			exit = true
-		case <-h.interrupted():
+		case <-h.interrupted:
 			exit = true
 		}
 
 		if exit {
 			for _, proc := range h.procs {
-				proc.Interrupt()
+				go proc.Interrupt()
 			}
 
 			break
 		}
 	}
 
-	<-h.interrupted()
+	<-h.interrupted
 
 	for _, proc := range h.procs {
-		proc.Kill()
+		go proc.Kill()
 	}
 }
 
 func (h *Hivemind) Run() {
 	h.done = make(chan bool, len(h.procs))
 
+	h.interrupted = make(chan os.Signal)
+	signal.Notify(h.interrupted, os.Interrupt, os.Kill)
+
 	for _, proc := range h.procs {
-		proc.Run(&h.procWg, h.done)
+		h.runProcess(proc)
 	}
 
 	go h.waitForExit()

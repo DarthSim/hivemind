@@ -45,27 +45,20 @@ func (p *Process) Running() bool {
 }
 
 func (p *Process) Run(wg *sync.WaitGroup, done chan bool) {
-	wg.Add(1)
+	multiterm.PipeOutput(p)
+	defer multiterm.ClosePipe(p)
 
-	go func(wg *sync.WaitGroup) {
-		defer wg.Done()
-		defer func() { done <- true }()
-
-		multiterm.PipeOutput(p)
-		defer multiterm.ClosePipe(p)
-
-		if err := p.Cmd.Run(); err != nil {
-			multiterm.WriteErr(p, err)
-		} else {
-			multiterm.WriteLine(p, []byte("\033[1mProcess exited\033[0m"))
-		}
-	}(wg)
+	if err := p.Cmd.Run(); err != nil {
+		multiterm.WriteErr(p, err)
+	} else {
+		multiterm.WriteLine(p, []byte("\033[1mProcess exited\033[0m"))
+	}
 }
 
 func (p *Process) Interrupt() {
-	go p.signal(syscall.SIGINT)
+	p.signal(syscall.SIGINT)
 }
 
 func (p *Process) Kill() {
-	go p.signal(syscall.SIGKILL)
+	p.signal(syscall.SIGKILL)
 }
