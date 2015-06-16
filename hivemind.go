@@ -47,20 +47,30 @@ func (h *Hivemind) interrupted() chan os.Signal {
 	return c
 }
 
-func (h *Hivemind) detectExit() {
+func (h *Hivemind) waitForExit() {
 	for {
 		var exit bool
 
 		select {
 		case <-h.done:
-			exit = config.ExitTogether
+			exit = true
 		case <-h.interrupted():
 			exit = true
 		}
 
 		if exit {
+			for _, proc := range h.procs {
+				proc.Interrupt()
+			}
+
 			break
 		}
+	}
+
+	<-h.interrupted()
+
+	for _, proc := range h.procs {
+		proc.Kill()
 	}
 }
 
@@ -71,13 +81,7 @@ func (h *Hivemind) Run() {
 		proc.Run(&h.procWg, h.done)
 	}
 
-	go func() {
-		h.detectExit()
-
-		for _, proc := range h.procs {
-			proc.Term()
-		}
-	}()
+	go h.waitForExit()
 
 	h.procWg.Wait()
 }

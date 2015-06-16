@@ -26,6 +26,20 @@ func NewProcess(name, command string, color int) (proc *Process) {
 	return
 }
 
+func (p *Process) signal(sig os.Signal) {
+	if p.Running() {
+		group, err := os.FindProcess(-p.Process.Pid)
+		if err != nil {
+			multiterm.WriteErr(p, err)
+			return
+		}
+
+		if err = group.Signal(sig); err != nil {
+			multiterm.WriteErr(p, err)
+		}
+	}
+}
+
 func (p *Process) Running() bool {
 	return p.Process != nil && p.ProcessState == nil
 }
@@ -48,18 +62,10 @@ func (p *Process) Run(wg *sync.WaitGroup, done chan bool) {
 	}(wg)
 }
 
-func (p *Process) Term() {
-	go func() {
-		if p.Running() {
-			group, err := os.FindProcess(-p.Process.Pid)
-			if err != nil {
-				multiterm.WriteErr(p, err)
-				return
-			}
+func (p *Process) Interrupt() {
+	go p.signal(syscall.SIGINT)
+}
 
-			if err = group.Signal(syscall.SIGINT); err != nil {
-				multiterm.WriteErr(p, err)
-			}
-		}
-	}()
+func (p *Process) Kill() {
+	go p.signal(syscall.SIGKILL)
 }
