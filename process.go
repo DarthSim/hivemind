@@ -27,16 +27,14 @@ func NewProcess(name, command string, color int) (proc *Process) {
 }
 
 func (p *Process) signal(sig os.Signal) {
-	if p.Running() {
-		group, err := os.FindProcess(-p.Process.Pid)
-		if err != nil {
-			multiterm.WriteErr(p, err)
-			return
-		}
+	group, err := os.FindProcess(-p.Process.Pid)
+	if err != nil {
+		multiterm.WriteErr(p, err)
+		return
+	}
 
-		if err = group.Signal(sig); err != nil {
-			multiterm.WriteErr(p, err)
-		}
+	if err = group.Signal(sig); err != nil {
+		multiterm.WriteErr(p, err)
 	}
 }
 
@@ -48,6 +46,8 @@ func (p *Process) Run(wg *sync.WaitGroup, done chan bool) {
 	multiterm.PipeOutput(p)
 	defer multiterm.ClosePipe(p)
 
+	multiterm.WriteLine(p, []byte("\033[1mRunning...\033[0m"))
+
 	if err := p.Cmd.Run(); err != nil {
 		multiterm.WriteErr(p, err)
 	} else {
@@ -56,9 +56,15 @@ func (p *Process) Run(wg *sync.WaitGroup, done chan bool) {
 }
 
 func (p *Process) Interrupt() {
-	p.signal(syscall.SIGINT)
+	if p.Running() {
+		multiterm.WriteLine(p, []byte("\033[1mInterrupting...\033[0m"))
+		p.signal(syscall.SIGINT)
+	}
 }
 
 func (p *Process) Kill() {
-	p.signal(syscall.SIGKILL)
+	if p.Running() {
+		multiterm.WriteLine(p, []byte("\033[1mKilling...\033[0m"))
+		p.signal(syscall.SIGKILL)
+	}
 }
