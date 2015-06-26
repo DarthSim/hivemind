@@ -10,9 +10,9 @@ Hivemind is a tool for running processes of a development environment. At the mo
 
 I used to use [Foreman](https://github.com/ddollar/foreman) by @ddolar, but I noticed a few problems with it:
 
-* Sometime Foreman loses a part of apps' output;
+* Sometimes Foreman loses a part of apps' output;
 * Foreman loses colors of most apps' output;
-* Sometime Foreman can't interrupt some apps.
+* Sometimes Foreman can't interrupt some apps.
 
 So I decided to write an alternative that won't have these problems. Now - meet Hivemind.
 
