@@ -1,10 +1,20 @@
 # Hivemind
 
-Hivemind is a tool for running processes of development environment. At the moment it supports Linux, FreeBSD and Mac OS X.
+Hivemind is a tool for running processes of a development environment. At the moment, it supports Linux, FreeBSD, and Mac OS X.
 
 <a href="https://evilmartians.com/?utm_source=hivemind">
 <img src="https://evilmartians.com/badges/sponsored-by-evil-martians.svg" alt="Sponsored by Evil Martians" width="236" height="54">
 </a>
+
+#### Why did I decide to develop Hivemind?
+
+I used to use [Foreman](https://github.com/ddollar/foreman) by @ddolar, but I noticed a few problems with it:
+
+* Sometime Foreman loses a part of apps' output;
+* Foreman loses colors of most apps' output;
+* Sometime Foreman can't interrupt some apps.
+
+So I decided to write an alternative that won't have these problems. Now - meet Hivemind.
 
 ## Installation
 
@@ -34,7 +44,7 @@ worker: bundle exec sidekiq
 assets: gulp watch
 ```
 
-To get started you just need to run Hivemind from your working directory containing Procfile.
+To get started, you just need to run Hivemind from your working directory containing Procfile.
 
 ```bash
 $ hivemind
@@ -51,6 +61,8 @@ Run `hivemind --help` to see other options.
 ## Author
 
 Sergey "DarthSim" Aleksandrovich
+
+Highly inspired by [Foreman](https://github.com/ddollar/foreman).
 
 ## License
 
