@@ -8,7 +8,7 @@ Hivemind is a tool for running processes of a development environment. At the mo
 
 #### Why did I decide to develop Hivemind?
 
-I used to use [Foreman](https://github.com/ddollar/foreman) by @ddolar, but I noticed a few problems with it:
+I used to use [Foreman](https://github.com/ddollar/foreman) by @ddollar, but I noticed a few problems with it:
 
 * Sometimes Foreman loses a part of apps' output;
 * Foreman loses colors of most apps' output;
