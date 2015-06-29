@@ -8,7 +8,7 @@ import (
 	"sync"
 	"syscall"
 
-	"github.com/kr/pty"
+	"github.com/DarthSim/pty"
 )
 
 type PtyPipe struct {
