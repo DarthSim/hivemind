@@ -23,8 +23,10 @@ You need Go to build the project.
 ### Using `go get`
 
 ```bash
-$ go get -u github.com/DarthSim/hivemind
+$ go get -u -f github.com/DarthSim/hivemind
 ```
+
+__Note:__ You can update Hivemind the same way.
 
 ### Using `make`
 
