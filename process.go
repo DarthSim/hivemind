@@ -23,6 +23,8 @@ func NewProcess(name, command string, color int) (proc *Process) {
 
 	proc.Dir = config.Root
 
+	multiterm.Connect(proc)
+
 	return
 }
 

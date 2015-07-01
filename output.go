@@ -24,30 +24,34 @@ type Multiterm struct {
 var multiterm = Multiterm{}
 
 func (m *Multiterm) openPipe(proc *Process) (pipe *PtyPipe) {
-	pty, tty, err := pty.Open()
+	var err error
+
+	pipe = m.pipes[proc]
+
+	pipe.pty, pipe.tty, err = pty.Open()
 	fatalOnErr(err)
 
-	pipe = &PtyPipe{pty, tty}
-
-	if m.pipes == nil {
-		m.pipes = make(map[*Process]*PtyPipe)
-	}
-
-	m.pipes[proc] = pipe
-
-	proc.Stdout = tty
-	proc.Stderr = tty
-	proc.Stdin = tty
+	proc.Stdout = pipe.tty
+	proc.Stderr = pipe.tty
+	proc.Stdin = pipe.tty
 	proc.SysProcAttr = &syscall.SysProcAttr{Setctty: true, Setsid: true}
 
 	return
 }
 
-func (m *Multiterm) PipeOutput(proc *Process) {
+func (m *Multiterm) Connect(proc *Process) {
 	if len(proc.Name) > m.maxNameLength {
 		m.maxNameLength = len(proc.Name)
 	}
 
+	if m.pipes == nil {
+		m.pipes = make(map[*Process]*PtyPipe)
+	}
+
+	m.pipes[proc] = &PtyPipe{}
+}
+
+func (m *Multiterm) PipeOutput(proc *Process) {
 	pipe := m.openPipe(proc)
 
 	go func(proc *Process, pipe *PtyPipe) {
