@@ -3,7 +3,6 @@ package main
 import (
 	"os"
 	"os/exec"
-	"sync"
 	"syscall"
 )
 
@@ -44,7 +43,7 @@ func (p *Process) Running() bool {
 	return p.Process != nil && p.ProcessState == nil
 }
 
-func (p *Process) Run(wg *sync.WaitGroup, done chan bool) {
+func (p *Process) Run() {
 	multiterm.PipeOutput(p)
 	defer multiterm.ClosePipe(p)
 

@@ -49,7 +49,7 @@ func (h *Hivemind) runProcess(proc *Process) {
 		defer h.procWg.Done()
 		defer func() { h.done <- true }()
 
-		proc.Run(&h.procWg, h.done)
+		proc.Run()
 	}()
 }
 
