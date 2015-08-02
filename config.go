@@ -4,7 +4,7 @@ import (
 	"os"
 	"path/filepath"
 
-	"gopkg.in/alecthomas/kingpin.v1"
+	"github.com/DarthSim/hivemind/_third_party/github.com/alecthomas/kingpin"
 )
 
 var config struct {

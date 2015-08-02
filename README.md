@@ -20,21 +20,11 @@ So I decided to write an alternative that won't have these problems. Now - meet 
 
 You need Go to build the project.
 
-### Using `go get`
-
 ```bash
 $ go get -u -f github.com/DarthSim/hivemind
 ```
 
 __Note:__ You can update Hivemind the same way.
-
-### Using `make`
-
-```bash
-git clone https://github.com/DarthSim/hivemind.git
-cd hivemind
-make install
-```
 
 ## Usage
 
