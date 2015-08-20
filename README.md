@@ -1,6 +1,6 @@
 # Hivemind
 
-https://travis-ci.org/DarthSim/hivemind.svg
+[![Build Status](https://travis-ci.org/DarthSim/hivemind.svg?branch=master)](https://travis-ci.org/DarthSim/hivemind)
 
 Hivemind is a tool for running processes of a development environment. At the moment, it supports Linux, FreeBSD, and Mac OS X.
 
