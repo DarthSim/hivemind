@@ -6,6 +6,7 @@ import (
 	"strconv"
 	"strings"
 	"sync"
+	"time"
 )
 
 type Hivemind struct {
@@ -53,27 +54,34 @@ func (h *Hivemind) runProcess(proc *Process) {
 	}()
 }
 
+func (h *Hivemind) waitForDoneOrInterupt() {
+	select {
+	case <-h.done:
+	case <-h.interrupted:
+	}
+}
+
+func (h *Hivemind) waitForTimeoutOrInterrupt() {
+	timeout := make(chan bool, 1)
+	go func() {
+		time.Sleep(1 * time.Second)
+		timeout <- true
+	}()
+
+	select {
+	case <-timeout:
+	case <-h.interrupted:
+	}
+}
+
 func (h *Hivemind) waitForExit() {
-	for {
-		var exit bool
+	h.waitForDoneOrInterupt()
 
-		select {
-		case <-h.done:
-			exit = true
-		case <-h.interrupted:
-			exit = true
-		}
-
-		if exit {
-			for _, proc := range h.procs {
-				go proc.Interrupt()
-			}
-
-			break
-		}
+	for _, proc := range h.procs {
+		go proc.Interrupt()
 	}
 
-	<-h.interrupted
+	h.waitForTimeoutOrInterrupt()
 
 	for _, proc := range h.procs {
 		go proc.Kill()
