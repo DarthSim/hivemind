@@ -9,6 +9,8 @@ import (
 	"time"
 )
 
+const baseColor = 32
+
 type Hivemind struct {
 	procs       []*Process
 	procWg      sync.WaitGroup
@@ -23,24 +25,17 @@ func NewHivemind() (h *Hivemind) {
 }
 
 func (h *Hivemind) createProcesses() {
-	color := 32
-	port := config.PortBase
+	entries := parseProcfile()
+	h.procs = make([]*Process, len(entries))
 
-	for _, entry := range parseProcfile() {
-		h.procs = append(
-			h.procs,
-			NewProcess(
-				entry.Name,
-				strings.Replace(entry.Command, "$PORT", strconv.Itoa(port), -1),
-				color,
-			),
+	for i, entry := range entries {
+		port := config.PortBase + config.PortStep*i
+		h.procs[i] = NewProcess(
+			entry.Name,
+			strings.Replace(entry.Command, "$PORT", strconv.Itoa(port), -1),
+			baseColor+i,
 		)
-
-		color++
-		port += config.PortStep
 	}
-
-	return
 }
 
 func (h *Hivemind) runProcess(proc *Process) {
