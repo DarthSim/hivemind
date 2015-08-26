@@ -26,7 +26,7 @@ func (h *Hivemind) createProcesses() {
 	color := 32
 	port := config.PortBase
 
-	for _, entry := range parseProcfile("Procfile") {
+	for _, entry := range parseProcfile() {
 		h.procs = append(
 			h.procs,
 			NewProcess(
