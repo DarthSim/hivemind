@@ -54,7 +54,7 @@ func (h *Hivemind) runProcess(proc *Process) {
 	}()
 }
 
-func (h *Hivemind) waitForDoneOrInterupt() {
+func (h *Hivemind) waitForDoneOrInterrupt() {
 	select {
 	case <-h.done:
 	case <-h.interrupted:
@@ -75,7 +75,7 @@ func (h *Hivemind) waitForTimeoutOrInterrupt() {
 }
 
 func (h *Hivemind) waitForExit() {
-	h.waitForDoneOrInterupt()
+	h.waitForDoneOrInterrupt()
 
 	for _, proc := range h.procs {
 		go proc.Interrupt()
