@@ -1,14 +1,13 @@
 package main
 
 import (
-	"os"
 	"path/filepath"
 
 	"github.com/DarthSim/hivemind/_third_party/github.com/alecthomas/kingpin"
 )
 
 var config struct {
-	Procfile           *os.File
+	Procfile           string
 	Root               string
 	PortBase, PortStep int
 	Timeout            int
@@ -21,7 +20,7 @@ func init() {
 	portStep := kingpin.Flag("port-step", "Specify a step to increase port number").Default("100").Short('P').Int()
 	root := kingpin.Flag("root", "Specify a working directory of application. Default: directory containing the Procfile").Short('d').String()
 	timeout := kingpin.Flag("timeout", "Specify the amount of time (in seconds) processes have to shut down gracefully before being brutally killed").Default("5").Short('t').Int()
-	procfile := kingpin.Arg("procfile", "Specify a Procfile to load").Default("./Procfile").File()
+	procfile := kingpin.Arg("procfile", "Specify a Procfile to load").Default("./Procfile").String()
 
 	kingpin.Parse()
 
@@ -37,7 +36,7 @@ func init() {
 	if len(*root) > 0 {
 		config.Root = *root
 	} else {
-		config.Root = filepath.Dir(config.Procfile.Name())
+		config.Root = filepath.Dir(config.Procfile)
 	}
 
 	config.Root, err = filepath.Abs(config.Root)
