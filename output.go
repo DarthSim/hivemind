@@ -21,8 +21,6 @@ type Multiterm struct {
 	pipes         map[*Process]*PtyPipe
 }
 
-var multiterm = Multiterm{}
-
 func (m *Multiterm) openPipe(proc *Process) (pipe *PtyPipe) {
 	var err error
 

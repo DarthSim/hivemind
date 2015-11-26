@@ -11,31 +11,42 @@ type Process struct {
 
 	Name  string
 	Color int
+
+	multiterm *Multiterm
 }
 
-func NewProcess(name, command string, color int) (proc *Process) {
+func NewProcess(name, command string, color int, multiterm *Multiterm) (proc *Process) {
 	proc = &Process{
 		exec.Command("/bin/sh", "-c", command),
 		name,
 		color,
+		multiterm,
 	}
 
 	proc.Dir = config.Root
 
-	multiterm.Connect(proc)
+	proc.multiterm.Connect(proc)
 
 	return
+}
+
+func (p *Process) writeLine(b []byte) {
+	p.multiterm.WriteLine(p, b)
+}
+
+func (p *Process) writeErr(err error) {
+	p.multiterm.WriteErr(p, err)
 }
 
 func (p *Process) signal(sig os.Signal) {
 	group, err := os.FindProcess(-p.Process.Pid)
 	if err != nil {
-		multiterm.WriteErr(p, err)
+		p.writeErr(err)
 		return
 	}
 
 	if err = group.Signal(sig); err != nil {
-		multiterm.WriteErr(p, err)
+		p.writeErr(err)
 	}
 }
 
@@ -44,28 +55,28 @@ func (p *Process) Running() bool {
 }
 
 func (p *Process) Run() {
-	multiterm.PipeOutput(p)
-	defer multiterm.ClosePipe(p)
+	p.multiterm.PipeOutput(p)
+	defer p.multiterm.ClosePipe(p)
 
-	multiterm.WriteLine(p, []byte("\033[1mRunning...\033[0m"))
+	p.writeLine([]byte("\033[1mRunning...\033[0m"))
 
 	if err := p.Cmd.Run(); err != nil {
-		multiterm.WriteErr(p, err)
+		p.writeErr(err)
 	} else {
-		multiterm.WriteLine(p, []byte("\033[1mProcess exited\033[0m"))
+		p.writeLine([]byte("\033[1mProcess exited\033[0m"))
 	}
 }
 
 func (p *Process) Interrupt() {
 	if p.Running() {
-		multiterm.WriteLine(p, []byte("\033[1mInterrupting...\033[0m"))
+		p.writeLine([]byte("\033[1mInterrupting...\033[0m"))
 		p.signal(syscall.SIGINT)
 	}
 }
 
 func (p *Process) Kill() {
 	if p.Running() {
-		multiterm.WriteLine(p, []byte("\033[1mKilling...\033[0m"))
+		p.writeLine([]byte("\033[1mKilling...\033[0m"))
 		p.signal(syscall.SIGKILL)
 	}
 }

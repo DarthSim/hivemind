@@ -12,6 +12,7 @@ import (
 const baseColor = 32
 
 type Hivemind struct {
+	multiterm   Multiterm
 	procs       []*Process
 	procWg      sync.WaitGroup
 	done        chan bool
@@ -20,6 +21,7 @@ type Hivemind struct {
 
 func NewHivemind() (h *Hivemind) {
 	h = &Hivemind{}
+	h.multiterm = Multiterm{}
 	h.createProcesses()
 	return
 }
@@ -34,6 +36,7 @@ func (h *Hivemind) createProcesses() {
 			entry.Name,
 			strings.Replace(entry.Command, "$PORT", strconv.Itoa(port), -1),
 			baseColor+i,
+			&h.multiterm,
 		)
 	}
 }
