@@ -57,14 +57,8 @@ func (h *Hivemind) waitForDoneOrInterrupt() {
 }
 
 func (h *Hivemind) waitForTimeoutOrInterrupt() {
-	timeout := make(chan bool, 1)
-	go func() {
-		time.Sleep(time.Duration(config.Timeout) * time.Second)
-		timeout <- true
-	}()
-
 	select {
-	case <-timeout:
+	case <-time.After(time.Duration(config.Timeout) * time.Second):
 	case <-h.interrupted:
 	}
 }
