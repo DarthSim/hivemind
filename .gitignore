@@ -1,3 +1,4 @@
 bin/
 _vendor/
 Procfile
+tmp/
