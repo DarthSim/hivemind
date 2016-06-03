@@ -7,12 +7,13 @@ package template
 import (
 	"bytes"
 	"fmt"
-	"github.com/alecthomas/template/parse"
 	"io"
 	"reflect"
 	"runtime"
 	"sort"
 	"strings"
+
+	"github.com/alecthomas/template/parse"
 )
 
 // state represents the state of an execution. It's not part of the
