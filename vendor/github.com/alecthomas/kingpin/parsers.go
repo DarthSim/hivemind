@@ -8,7 +8,7 @@ import (
 	"os"
 	"time"
 
-	"github.com/DarthSim/hivemind/_third_party/github.com/alecthomas/units"
+	"github.com/alecthomas/units"
 )
 
 type Settings interface {

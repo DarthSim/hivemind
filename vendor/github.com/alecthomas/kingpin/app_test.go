@@ -3,7 +3,7 @@ package kingpin
 import (
 	"io/ioutil"
 
-	"github.com/DarthSim/hivemind/_third_party/github.com/stretchr/testify/assert"
+	"github.com/stretchr/testify/assert"
 
 	"testing"
 	"time"

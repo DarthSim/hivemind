@@ -6,7 +6,7 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/DarthSim/hivemind/_third_party/github.com/stretchr/testify/assert"
+	"github.com/stretchr/testify/assert"
 )
 
 func TestFormatTwoColumns(t *testing.T) {

@@ -5,7 +5,7 @@ import (
 	"os"
 	"testing"
 
-	"github.com/DarthSim/hivemind/_third_party/github.com/stretchr/testify/assert"
+	"github.com/stretchr/testify/assert"
 )
 
 func TestParserExpandFromFile(t *testing.T) {

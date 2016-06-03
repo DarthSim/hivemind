@@ -3,7 +3,7 @@ package main
 import (
 	"path/filepath"
 
-	"github.com/DarthSim/hivemind/_third_party/github.com/alecthomas/kingpin"
+	"github.com/alecthomas/kingpin"
 )
 
 var config struct {

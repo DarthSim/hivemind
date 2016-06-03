@@ -6,7 +6,7 @@ package template
 
 import (
 	"fmt"
-	"github.com/DarthSim/hivemind/_third_party/github.com/alecthomas/template/parse"
+	"github.com/alecthomas/template/parse"
 	"reflect"
 )
 

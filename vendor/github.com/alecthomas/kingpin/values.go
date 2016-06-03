@@ -11,7 +11,7 @@ import (
 	"strings"
 	"time"
 
-	"github.com/DarthSim/hivemind/_third_party/github.com/alecthomas/units"
+	"github.com/alecthomas/units"
 )
 
 // NOTE: Most of the base type values were lifted from:

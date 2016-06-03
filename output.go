@@ -8,7 +8,7 @@ import (
 	"sync"
 	"syscall"
 
-	"github.com/DarthSim/hivemind/_third_party/github.com/kr/pty"
+	"github.com/kr/pty"
 )
 
 type PtyPipe struct {

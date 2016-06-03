@@ -7,7 +7,7 @@ import (
 	"io"
 	"strings"
 
-	"github.com/DarthSim/hivemind/_third_party/github.com/alecthomas/template"
+	"github.com/alecthomas/template"
 )
 
 var (
