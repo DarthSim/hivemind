@@ -20,11 +20,12 @@ So I decided to write an alternative that won't have these problems. Now - meet 
 
 ## Installation
 
-You need Go to build the project.
+You need Go 1.5 or later to build the project.
 
 ```bash
 $ go get -u -f github.com/DarthSim/hivemind
 ```
+__Note:__ You need to set `GO15VENDOREXPERIMENT=1` to build hivemind with Go 1.5.
 
 __Note:__ You can update Hivemind the same way.
 
