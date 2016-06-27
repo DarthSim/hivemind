@@ -20,6 +20,14 @@ So I decided to write an alternative that won't have these problems. Now - meet 
 
 ## Installation
 
+#### With Homebrew (macOS)
+
+```bash
+brew install hivemind
+```
+
+#### From Source
+
 You need Go 1.5 or later to build the project.
 
 ```bash
