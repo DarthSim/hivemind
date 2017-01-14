@@ -15,7 +15,7 @@ type Process struct {
 	multiterm *Multiterm
 }
 
-func NewProcess(name, command string, color int, multiterm *Multiterm) (proc *Process) {
+func NewProcess(name, command string, color int, root string, multiterm *Multiterm) (proc *Process) {
 	proc = &Process{
 		exec.Command("/bin/sh", "-c", command),
 		name,
@@ -23,7 +23,7 @@ func NewProcess(name, command string, color int, multiterm *Multiterm) (proc *Pr
 		multiterm,
 	}
 
-	proc.Dir = config.Root
+	proc.Dir = root
 
 	proc.multiterm.Connect(proc)
 

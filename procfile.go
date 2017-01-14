@@ -11,10 +11,10 @@ type ProcfileEntry struct {
 	Command string
 }
 
-func parseProcfile() (entries []ProcfileEntry) {
+func parseProcfile(path string) (entries []ProcfileEntry) {
 	re, _ := regexp.Compile("^(\\w+):\\s+(.+)$")
 
-	f, err := os.Open(config.Procfile)
+	f, err := os.Open(path)
 	fatalOnErr(err)
 
 	scanner := bufio.NewScanner(f)

@@ -11,7 +11,15 @@ import (
 
 const baseColor = 32
 
+type hivemindConfig struct {
+	Procfile           string
+	Root               string
+	PortBase, PortStep int
+	Timeout            int
+}
+
 type Hivemind struct {
+	conf        hivemindConfig
 	multiterm   Multiterm
 	procs       []*Process
 	procWg      sync.WaitGroup
@@ -19,23 +27,24 @@ type Hivemind struct {
 	interrupted chan os.Signal
 }
 
-func NewHivemind() (h *Hivemind) {
-	h = &Hivemind{}
+func NewHivemind(conf hivemindConfig) (h *Hivemind) {
+	h = &Hivemind{conf: conf}
 	h.multiterm = Multiterm{}
 	h.createProcesses()
 	return
 }
 
 func (h *Hivemind) createProcesses() {
-	entries := parseProcfile()
+	entries := parseProcfile(h.conf.Procfile)
 	h.procs = make([]*Process, len(entries))
 
 	for i, entry := range entries {
-		port := config.PortBase + config.PortStep*i
+		port := h.conf.PortBase + h.conf.PortStep*i
 		h.procs[i] = NewProcess(
 			entry.Name,
 			strings.Replace(entry.Command, "$PORT", strconv.Itoa(port), -1),
 			baseColor+i,
+			h.conf.Root,
 			&h.multiterm,
 		)
 	}
@@ -61,7 +70,7 @@ func (h *Hivemind) waitForDoneOrInterrupt() {
 
 func (h *Hivemind) waitForTimeoutOrInterrupt() {
 	select {
-	case <-time.After(time.Duration(config.Timeout) * time.Second):
+	case <-time.After(time.Duration(h.conf.Timeout) * time.Second):
 	case <-h.interrupted:
 	}
 }

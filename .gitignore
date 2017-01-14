@@ -2,3 +2,5 @@ bin/
 _vendor/
 Procfile
 tmp/
+
+hivemind

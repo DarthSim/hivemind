@@ -12,9 +12,7 @@ func fatalOnErr(err error) {
 }
 
 func fatal(i ...interface{}) {
-	fmt.Print("\033[1;31m")
-	fmt.Print(i...)
-	fmt.Print("\033[0m\n")
-
+	fmt.Fprint(os.Stderr, "hivemind: ")
+	fmt.Fprintln(os.Stderr, i...)
 	os.Exit(1)
 }
