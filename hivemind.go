@@ -11,6 +11,7 @@ const baseColor = 32
 
 type hivemindConfig struct {
 	Procfile           string
+	ProcNames          string
 	Root               string
 	PortBase, PortStep int
 	Timeout            int
@@ -30,10 +31,14 @@ func newHivemind(conf hivemindConfig) (h *hivemind) {
 	h.output = &multiOutput{}
 
 	entries := parseProcfile(conf.Procfile, conf.PortBase, conf.PortStep)
-	h.procs = make([]*process, len(entries))
+	h.procs = make([]*process, 0)
+
+	procNames := splitAndTrim(conf.ProcNames)
 
 	for i, entry := range entries {
-		h.procs[i] = newProcess(entry.Name, entry.Command, baseColor+i, conf.Root, h.output)
+		if len(procNames) == 0 || stringsContain(procNames, entry.Name) {
+			h.procs = append(h.procs, newProcess(entry.Name, entry.Command, baseColor+i, conf.Root, h.output))
+		}
 	}
 
 	return
