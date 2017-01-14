@@ -26,6 +26,10 @@ Hivemind uses `pty` to capture process output. That fixes any problem with log c
 brew install hivemind
 ```
 
+#### Download the latest Hivemind release binary
+
+You can download the latest release [here](https://github.com/DarthSim/hivemind/releases/latest).
+
 #### From Source
 
 You need Go 1.5 or later to build the project.
