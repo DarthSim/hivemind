@@ -2,5 +2,6 @@ bin/
 _vendor/
 Procfile
 tmp/
+dist/
 
 hivemind
