@@ -7,8 +7,14 @@ go:
   - 1.7
   - tip
 install:
-  - go get -u gopkg.in/alecthomas/gometalinter.v1
-  - gometalinter.v1 --install
+  -
+    if ! [[ $(go version) =~ "go version go1.5" ]]; then
+      go get -u gopkg.in/alecthomas/gometalinter.v1;
+      gometalinter.v1 --install;
+    fi
 script:
-  - gometalinter.v1 --vendor --disable-all --enable=vet --enable=vetshadow --enable=golint ./...
+  -
+    if ! [[ $(go version) =~ "go version go1.5" ]]; then
+      gometalinter.v1 --vendor --disable-all --enable=vet --enable=vetshadow --enable=golint ./...;
+    fi
   - go build
