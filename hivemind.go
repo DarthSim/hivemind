@@ -3,8 +3,6 @@ package main
 import (
 	"os"
 	"os/signal"
-	"strconv"
-	"strings"
 	"sync"
 	"time"
 )
@@ -35,18 +33,11 @@ func NewHivemind(conf hivemindConfig) (h *Hivemind) {
 }
 
 func (h *Hivemind) createProcesses() {
-	entries := parseProcfile(h.conf.Procfile)
+	entries := parseProcfile(h.conf.Procfile, h.conf.PortBase, h.conf.PortStep)
 	h.procs = make([]*Process, len(entries))
 
 	for i, entry := range entries {
-		port := h.conf.PortBase + h.conf.PortStep*i
-		h.procs[i] = NewProcess(
-			entry.Name,
-			strings.Replace(entry.Command, "$PORT", strconv.Itoa(port), -1),
-			baseColor+i,
-			h.conf.Root,
-			&h.multiterm,
-		)
+		h.procs[i] = NewProcess(entry.Name, entry.Command, baseColor+i, h.conf.Root, &h.multiterm)
 	}
 }
 
