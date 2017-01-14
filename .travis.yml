@@ -3,5 +3,9 @@ go:
   - 1.5
   - 1.6
   - tip
+install:
+  - go get -u gopkg.in/alecthomas/gometalinter.v1
+  - gometalinter.v1 --install
 script:
+  - gometalinter.v1 --vendor --disable-all --enable=vet --enable=vetshadow --enable=golint ./...
   - GO15VENDOREXPERIMENT="1" go build
