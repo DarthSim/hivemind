@@ -92,6 +92,6 @@ func (m *multiOutput) WriteLine(proc *process, p []byte) {
 
 func (m *multiOutput) WriteErr(proc *process, err error) {
 	m.WriteLine(proc, []byte(
-		fmt.Sprintf("\033[1;31m%v\033[0m", err),
+		fmt.Sprintf("\033[0;31m%v\033[0m", err),
 	))
 }
