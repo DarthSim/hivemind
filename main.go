@@ -55,7 +55,7 @@ func main() {
 		conf.Root, err = filepath.Abs(conf.Root)
 		fatalOnErr(err)
 
-		NewHivemind(conf).Run()
+		newHivemind(conf).Run()
 
 		return nil
 	}

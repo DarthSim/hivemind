@@ -16,32 +16,30 @@ type hivemindConfig struct {
 	Timeout            int
 }
 
-type Hivemind struct {
+type hivemind struct {
 	conf        hivemindConfig
-	multiterm   Multiterm
-	procs       []*Process
+	output      multiOutput
+	procs       []*process
 	procWg      sync.WaitGroup
 	done        chan bool
 	interrupted chan os.Signal
 }
 
-func NewHivemind(conf hivemindConfig) (h *Hivemind) {
-	h = &Hivemind{conf: conf}
-	h.multiterm = Multiterm{}
-	h.createProcesses()
+func newHivemind(conf hivemindConfig) (h *hivemind) {
+	h = &hivemind{conf: conf}
+	h.output = multiOutput{}
+
+	entries := parseProcfile(h.conf.Procfile, h.conf.PortBase, h.conf.PortStep)
+	h.procs = make([]*process, len(entries))
+
+	for i, entry := range entries {
+		h.procs[i] = newProcess(entry.Name, entry.Command, baseColor+i, h.conf.Root, &h.output)
+	}
+
 	return
 }
 
-func (h *Hivemind) createProcesses() {
-	entries := parseProcfile(h.conf.Procfile, h.conf.PortBase, h.conf.PortStep)
-	h.procs = make([]*Process, len(entries))
-
-	for i, entry := range entries {
-		h.procs[i] = NewProcess(entry.Name, entry.Command, baseColor+i, h.conf.Root, &h.multiterm)
-	}
-}
-
-func (h *Hivemind) runProcess(proc *Process) {
+func (h *hivemind) runProcess(proc *process) {
 	h.procWg.Add(1)
 
 	go func() {
@@ -52,21 +50,21 @@ func (h *Hivemind) runProcess(proc *Process) {
 	}()
 }
 
-func (h *Hivemind) waitForDoneOrInterrupt() {
+func (h *hivemind) waitForDoneOrInterrupt() {
 	select {
 	case <-h.done:
 	case <-h.interrupted:
 	}
 }
 
-func (h *Hivemind) waitForTimeoutOrInterrupt() {
+func (h *hivemind) waitForTimeoutOrInterrupt() {
 	select {
 	case <-time.After(time.Duration(h.conf.Timeout) * time.Second):
 	case <-h.interrupted:
 	}
 }
 
-func (h *Hivemind) waitForExit() {
+func (h *hivemind) waitForExit() {
 	h.waitForDoneOrInterrupt()
 
 	for _, proc := range h.procs {
@@ -80,7 +78,7 @@ func (h *Hivemind) waitForExit() {
 	}
 }
 
-func (h *Hivemind) Run() {
+func (h *hivemind) Run() {
 	h.done = make(chan bool, len(h.procs))
 
 	h.interrupted = make(chan os.Signal)

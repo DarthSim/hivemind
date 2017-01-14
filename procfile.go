@@ -8,12 +8,12 @@ import (
 	"strings"
 )
 
-type ProcfileEntry struct {
+type procfileEntry struct {
 	Name    string
 	Command string
 }
 
-func parseProcfile(path string, portBase, portStep int) (entries []ProcfileEntry) {
+func parseProcfile(path string, portBase, portStep int) (entries []procfileEntry) {
 	re, _ := regexp.Compile("^(\\w+):\\s+(.+)$")
 
 	f, err := os.Open(path)
@@ -40,7 +40,7 @@ func parseProcfile(path string, portBase, portStep int) (entries []ProcfileEntry
 		}
 		names[name] = true
 
-		entries = append(entries, ProcfileEntry{
+		entries = append(entries, procfileEntry{
 			name,
 			strings.Replace(cmd, "$PORT", strconv.Itoa(port), -1),
 		})

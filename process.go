@@ -6,39 +6,39 @@ import (
 	"syscall"
 )
 
-type Process struct {
+type process struct {
 	*exec.Cmd
 
 	Name  string
 	Color int
 
-	multiterm *Multiterm
+	output *multiOutput
 }
 
-func NewProcess(name, command string, color int, root string, multiterm *Multiterm) (proc *Process) {
-	proc = &Process{
+func newProcess(name, command string, color int, root string, output *multiOutput) (proc *process) {
+	proc = &process{
 		exec.Command("/bin/sh", "-c", command),
 		name,
 		color,
-		multiterm,
+		output,
 	}
 
 	proc.Dir = root
 
-	proc.multiterm.Connect(proc)
+	proc.output.Connect(proc)
 
 	return
 }
 
-func (p *Process) writeLine(b []byte) {
-	p.multiterm.WriteLine(p, b)
+func (p *process) writeLine(b []byte) {
+	p.output.WriteLine(p, b)
 }
 
-func (p *Process) writeErr(err error) {
-	p.multiterm.WriteErr(p, err)
+func (p *process) writeErr(err error) {
+	p.output.WriteErr(p, err)
 }
 
-func (p *Process) signal(sig os.Signal) {
+func (p *process) signal(sig os.Signal) {
 	group, err := os.FindProcess(-p.Process.Pid)
 	if err != nil {
 		p.writeErr(err)
@@ -50,13 +50,13 @@ func (p *Process) signal(sig os.Signal) {
 	}
 }
 
-func (p *Process) Running() bool {
+func (p *process) Running() bool {
 	return p.Process != nil && p.ProcessState == nil
 }
 
-func (p *Process) Run() {
-	p.multiterm.PipeOutput(p)
-	defer p.multiterm.ClosePipe(p)
+func (p *process) Run() {
+	p.output.PipeOutput(p)
+	defer p.output.ClosePipe(p)
 
 	p.writeLine([]byte("\033[1mRunning...\033[0m"))
 
@@ -67,14 +67,14 @@ func (p *Process) Run() {
 	}
 }
 
-func (p *Process) Interrupt() {
+func (p *process) Interrupt() {
 	if p.Running() {
 		p.writeLine([]byte("\033[1mInterrupting...\033[0m"))
 		p.signal(syscall.SIGINT)
 	}
 }
 
-func (p *Process) Kill() {
+func (p *process) Kill() {
 	if p.Running() {
 		p.writeLine([]byte("\033[1mKilling...\033[0m"))
 		p.signal(syscall.SIGKILL)
