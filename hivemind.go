@@ -17,23 +17,23 @@ type hivemindConfig struct {
 }
 
 type hivemind struct {
-	conf        hivemindConfig
 	output      *multiOutput
 	procs       []*process
 	procWg      sync.WaitGroup
 	done        chan bool
 	interrupted chan os.Signal
+	timeout     time.Duration
 }
 
 func newHivemind(conf hivemindConfig) (h *hivemind) {
-	h = &hivemind{conf: conf}
+	h = &hivemind{timeout: time.Duration(conf.Timeout) * time.Second}
 	h.output = &multiOutput{}
 
-	entries := parseProcfile(h.conf.Procfile, h.conf.PortBase, h.conf.PortStep)
+	entries := parseProcfile(conf.Procfile, conf.PortBase, conf.PortStep)
 	h.procs = make([]*process, len(entries))
 
 	for i, entry := range entries {
-		h.procs[i] = newProcess(entry.Name, entry.Command, baseColor+i, h.conf.Root, h.output)
+		h.procs[i] = newProcess(entry.Name, entry.Command, baseColor+i, conf.Root, h.output)
 	}
 
 	return
@@ -59,7 +59,7 @@ func (h *hivemind) waitForDoneOrInterrupt() {
 
 func (h *hivemind) waitForTimeoutOrInterrupt() {
 	select {
-	case <-time.After(time.Duration(h.conf.Timeout) * time.Second):
+	case <-time.After(h.timeout):
 	case <-h.interrupted:
 	}
 }
