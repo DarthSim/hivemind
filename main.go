@@ -7,7 +7,7 @@ import (
 	cli "gopkg.in/urfave/cli.v1"
 )
 
-const version = "1.0.0"
+const version = "1.0.1"
 
 func main() {
 	var (
