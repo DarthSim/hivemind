@@ -18,7 +18,7 @@ type hivemindConfig struct {
 
 type hivemind struct {
 	conf        hivemindConfig
-	output      multiOutput
+	output      *multiOutput
 	procs       []*process
 	procWg      sync.WaitGroup
 	done        chan bool
@@ -27,13 +27,13 @@ type hivemind struct {
 
 func newHivemind(conf hivemindConfig) (h *hivemind) {
 	h = &hivemind{conf: conf}
-	h.output = multiOutput{}
+	h.output = &multiOutput{}
 
 	entries := parseProcfile(h.conf.Procfile, h.conf.PortBase, h.conf.PortStep)
 	h.procs = make([]*process, len(entries))
 
 	for i, entry := range entries {
-		h.procs[i] = newProcess(entry.Name, entry.Command, baseColor+i, h.conf.Root, &h.output)
+		h.procs[i] = newProcess(entry.Name, entry.Command, baseColor+i, h.conf.Root, h.output)
 	}
 
 	return
