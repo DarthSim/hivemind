@@ -1,5 +1,8 @@
 # Hivemind
 
+<img align="right" width="224" height="74" title="Hivemind logo"
+     src="https://cdn.rawgit.com/DarthSim/hivemind/master/logo.svg">
+
 [![Build Status](https://travis-ci.org/DarthSim/hivemind.svg?branch=master)](https://travis-ci.org/DarthSim/hivemind)
 
 Hivemind is a process manager for Procfile-based applications. At the moment, it supports Linux, FreeBSD, and macOS.
@@ -70,6 +73,8 @@ Run `hivemind --help` to see other options.
 Sergey "DarthSim" Aleksandrovich
 
 Highly inspired by [Foreman](https://github.com/ddollar/foreman).
+
+Many thanks to @antiflasher for the awesome logo.
 
 ## License
 
