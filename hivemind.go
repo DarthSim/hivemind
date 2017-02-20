@@ -17,6 +17,7 @@ type hivemindConfig struct {
 	PortBase, PortStep int
 	Timeout            int
 	ForceTTY		   bool
+	LogFormat		   string
 }
 
 type hivemind struct {
@@ -36,6 +37,7 @@ func newHivemind(conf hivemindConfig) (h *hivemind) {
 
 	h.output = &multiOutput{
 		ColorizeOutput: colorizeOutput,
+		LogFormat: LogFormat(conf.LogFormat),
 	}
 
 	entries := parseProcfile(conf.Procfile, conf.PortBase, conf.PortStep)

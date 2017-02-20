@@ -7,15 +7,34 @@ import (
 	"os"
 	"sync"
 	"syscall"
+	"encoding/json"
 
 	"github.com/kr/pty"
 )
 
-type StringStyle int
+type stringStyle int
+
+// ColorErr is the color used for writing errors with styled text
+const ColorErr int = 31
 
 const (
-	StyleNone StringStyle = iota
-	StyleBold
+	styleNone  stringStyle = iota
+	styleBold
+	styleError
+)
+
+// Helper struct for outputting line-delimited JSON
+type jsonlog struct {
+	Process	string	`json:"name"`
+	Line	string	`json:"line"`
+}
+
+// LogFormat specifies the output format of logging.
+type LogFormat string
+
+const (
+	logFormatText LogFormat = "text"
+	logFormatJSON           = "json"
 )
 
 type ptyPipe struct {
@@ -24,6 +43,7 @@ type ptyPipe struct {
 
 type multiOutput struct {
 	ColorizeOutput bool
+	LogFormat LogFormat
 
 	maxNameLength int
 	mutex         sync.Mutex
@@ -65,7 +85,7 @@ func (m *multiOutput) PipeOutput(proc *process) {
 		scanner := bufio.NewScanner(pipe.pty)
 
 		for scanner.Scan() {
-			m.WriteLine(proc, scanner.Bytes(), StyleNone)
+			m.WriteLine(proc, scanner.Bytes(), styleNone)
 		}
 	}(proc, pipe)
 }
@@ -77,10 +97,17 @@ func (m *multiOutput) ClosePipe(proc *process) {
 	}
 }
 
-func (m *multiOutput) WriteLine(proc *process, p []byte, style StringStyle) {
+func (m *multiOutput) textLogLine(proc *process, p []byte, style stringStyle) bytes.Buffer {
 	var buf bytes.Buffer
 
-	color := fmt.Sprintf("\033[1;%vm", proc.Color)
+	var colorCode int
+	if style == styleError {
+		colorCode = ColorErr
+	} else {
+		colorCode = proc.Color
+	}
+
+	color := fmt.Sprintf("\033[1;%vm", colorCode)
 
 	if m.ColorizeOutput {
 		buf.WriteString(color)
@@ -104,17 +131,46 @@ func (m *multiOutput) WriteLine(proc *process, p []byte, style StringStyle) {
 		buf.WriteString(" | ")
 	}
 
-	if style == StyleBold && m.ColorizeOutput {
+	if style == styleBold && m.ColorizeOutput {
 		buf.WriteString("\033[1m")
 	}
 
 	buf.Write(p)
 
-	if style == StyleBold {
+	if style == styleBold {
 		buf.WriteString("\033[0m")
 	}
 
 	buf.WriteByte('\n')
+	return buf
+}
+
+func (m *multiOutput) jsonLogLine(proc *process, p []byte) bytes.Buffer {
+	var buf bytes.Buffer
+
+	data := jsonlog{
+		Process: proc.Name,
+		Line: string(p),
+	}
+
+	line, _ := json.Marshal(&data)
+	buf.Write(line)
+	buf.WriteByte('\n')
+	return buf
+}
+
+func (m *multiOutput) WriteLine(proc *process, p []byte, style stringStyle) {
+
+	var buf bytes.Buffer
+
+	switch m.LogFormat {
+	case logFormatText:
+		buf = m.textLogLine(proc, p, style)
+	case logFormatJSON:
+		buf = m.jsonLogLine(proc, p)
+	default:
+		panic("BUG: Log Format was invalid!")
+	}
 
 	m.mutex.Lock()
 	defer m.mutex.Unlock()
@@ -125,9 +181,9 @@ func (m *multiOutput) WriteLine(proc *process, p []byte, style StringStyle) {
 func (m *multiOutput) WriteErr(proc *process, err error) {
 	if m.ColorizeOutput {
 		m.WriteLine(proc, []byte(
-				fmt.Sprintf("\033[0;31m%v\033[0m", err)), StyleNone)
+				fmt.Sprintf("%v", err)), styleError)
 	} else {
-		m.WriteLine(proc, []byte(fmt.Sprintf("%v", err) ), StyleNone)
+		m.WriteLine(proc, []byte(fmt.Sprintf("%v", err) ), styleError)
 	}
 
 }
