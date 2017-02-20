@@ -30,8 +30,8 @@ func newProcess(name, command string, color int, root string, output *multiOutpu
 	return
 }
 
-func (p *process) writeLine(b []byte) {
-	p.output.WriteLine(p, b)
+func (p *process) writeLine(b []byte, style StringStyle) {
+	p.output.WriteLine(p, b, style)
 }
 
 func (p *process) writeErr(err error) {
@@ -58,25 +58,25 @@ func (p *process) Run() {
 	p.output.PipeOutput(p)
 	defer p.output.ClosePipe(p)
 
-	p.writeLine([]byte("\033[1mRunning...\033[0m"))
+	p.writeLine([]byte("Running..."), StyleBold)
 
 	if err := p.Cmd.Run(); err != nil {
 		p.writeErr(err)
 	} else {
-		p.writeLine([]byte("\033[1mProcess exited\033[0m"))
+		p.writeLine([]byte("Process exited"), StyleBold)
 	}
 }
 
 func (p *process) Interrupt() {
 	if p.Running() {
-		p.writeLine([]byte("\033[1mInterrupting...\033[0m"))
+		p.writeLine([]byte("Interrupting..."), StyleBold)
 		p.signal(syscall.SIGINT)
 	}
 }
 
 func (p *process) Kill() {
 	if p.Running() {
-		p.writeLine([]byte("\033[1mKilling...\033[0m"))
+		p.writeLine([]byte("Killing..."), StyleBold)
 		p.signal(syscall.SIGKILL)
 	}
 }

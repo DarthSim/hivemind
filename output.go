@@ -11,11 +11,20 @@ import (
 	"github.com/kr/pty"
 )
 
+type StringStyle int
+
+const (
+	StyleNone StringStyle = iota
+	StyleBold
+)
+
 type ptyPipe struct {
 	pty, tty *os.File
 }
 
 type multiOutput struct {
+	ColorizeOutput bool
+
 	maxNameLength int
 	mutex         sync.Mutex
 	pipes         map[*process]*ptyPipe
@@ -56,7 +65,7 @@ func (m *multiOutput) PipeOutput(proc *process) {
 		scanner := bufio.NewScanner(pipe.pty)
 
 		for scanner.Scan() {
-			m.WriteLine(proc, scanner.Bytes())
+			m.WriteLine(proc, scanner.Bytes(), StyleNone)
 		}
 	}(proc, pipe)
 }
@@ -68,20 +77,43 @@ func (m *multiOutput) ClosePipe(proc *process) {
 	}
 }
 
-func (m *multiOutput) WriteLine(proc *process, p []byte) {
+func (m *multiOutput) WriteLine(proc *process, p []byte, style StringStyle) {
 	var buf bytes.Buffer
 
 	color := fmt.Sprintf("\033[1;%vm", proc.Color)
 
-	buf.WriteString(color)
-	buf.WriteString(proc.Name)
-
-	for buf.Len()-len(color) < m.maxNameLength {
-		buf.WriteByte(' ')
+	if m.ColorizeOutput {
+		buf.WriteString(color)
 	}
 
-	buf.WriteString("\033[0m | ")
+	buf.WriteString(proc.Name)
+
+	if m.ColorizeOutput {
+		for buf.Len()-len(color) < m.maxNameLength {
+			buf.WriteByte(' ')
+		}
+	} else {
+		for buf.Len() < m.maxNameLength {
+			buf.WriteByte(' ')
+		}
+	}
+
+	if m.ColorizeOutput {
+		buf.WriteString("\033[0m | ")
+	} else {
+		buf.WriteString(" | ")
+	}
+
+	if style == StyleBold && m.ColorizeOutput {
+		buf.WriteString("\033[1m")
+	}
+
 	buf.Write(p)
+
+	if style == StyleBold {
+		buf.WriteString("\033[0m")
+	}
+
 	buf.WriteByte('\n')
 
 	m.mutex.Lock()
@@ -91,7 +123,11 @@ func (m *multiOutput) WriteLine(proc *process, p []byte) {
 }
 
 func (m *multiOutput) WriteErr(proc *process, err error) {
-	m.WriteLine(proc, []byte(
-		fmt.Sprintf("\033[0;31m%v\033[0m", err),
-	))
+	if m.ColorizeOutput {
+		m.WriteLine(proc, []byte(
+				fmt.Sprintf("\033[0;31m%v\033[0m", err)), StyleNone)
+	} else {
+		m.WriteLine(proc, []byte(fmt.Sprintf("%v", err) ), StyleNone)
+	}
+
 }
