@@ -37,7 +37,7 @@ func newHivemind(conf hivemindConfig) (h *hivemind) {
 
 	for i, entry := range entries {
 		if len(procNames) == 0 || stringsContain(procNames, entry.Name) {
-			h.procs = append(h.procs, newProcess(entry.Name, entry.Command, baseColor+i, conf.Root, h.output))
+			h.procs = append(h.procs, newProcess(entry.Name, entry.Command, baseColor+i, conf.Root, entry.Port, h.output))
 		}
 	}
 

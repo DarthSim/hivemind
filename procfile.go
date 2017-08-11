@@ -4,13 +4,12 @@ import (
 	"bufio"
 	"os"
 	"regexp"
-	"strconv"
-	"strings"
 )
 
 type procfileEntry struct {
 	Name    string
 	Command string
+	Port    int
 }
 
 func parseProcfile(path string, portBase, portStep int) (entries []procfileEntry) {
@@ -40,10 +39,7 @@ func parseProcfile(path string, portBase, portStep int) (entries []procfileEntry
 		}
 		names[name] = true
 
-		entries = append(entries, procfileEntry{
-			name,
-			strings.Replace(cmd, "$PORT", strconv.Itoa(port), -1),
-		})
+		entries = append(entries, procfileEntry{name, cmd, port})
 
 		port += portStep
 	}

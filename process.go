@@ -1,6 +1,7 @@
 package main
 
 import (
+	"fmt"
 	"os"
 	"os/exec"
 	"syscall"
@@ -15,7 +16,7 @@ type process struct {
 	output *multiOutput
 }
 
-func newProcess(name, command string, color int, root string, output *multiOutput) (proc *process) {
+func newProcess(name, command string, color int, root string, port int, output *multiOutput) (proc *process) {
 	proc = &process{
 		exec.Command("/bin/sh", "-c", command),
 		name,
@@ -24,6 +25,7 @@ func newProcess(name, command string, color int, root string, output *multiOutpu
 	}
 
 	proc.Dir = root
+	proc.Env = append(os.Environ(), fmt.Sprintf("PORT=%d", port))
 
 	proc.output.Connect(proc)
 
