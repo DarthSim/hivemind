@@ -33,6 +33,8 @@ func main() {
 		cli.IntFlag{Name: "port-step, P", Usage: "specify a step to increase port number", Value: 100, Destination: &conf.PortStep},
 		cli.StringFlag{Name: "root, d", Usage: "specify a working directory of application. Default: directory containing the Procfile", Destination: &conf.Root},
 		cli.IntFlag{Name: "timeout, t", Usage: "specify the amount of time (in seconds) processes have to shut down gracefully before being brutally killed", Value: 5, Destination: &conf.Timeout},
+		cli.BoolFlag{Name: "force-tty, T", Usage: "force treating the output terminal as a TTY even if it isn't one.", Destination: &conf.ForceTTY},
+		cli.StringFlag{Name: "log-format, F", Usage: "specify the log format (text,json)", Destination: &conf.LogFormat, Value: string(logFormatText)},
 	}
 
 	app.Action = func(c *cli.Context) error {

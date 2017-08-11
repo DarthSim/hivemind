@@ -5,6 +5,7 @@ import (
 	"os/signal"
 	"sync"
 	"time"
+	"golang.org/x/crypto/ssh/terminal"
 )
 
 const baseColor = 32
@@ -15,6 +16,8 @@ type hivemindConfig struct {
 	Root               string
 	PortBase, PortStep int
 	Timeout            int
+	ForceTTY		   bool
+	LogFormat		   string
 }
 
 type hivemind struct {
@@ -28,7 +31,14 @@ type hivemind struct {
 
 func newHivemind(conf hivemindConfig) (h *hivemind) {
 	h = &hivemind{timeout: time.Duration(conf.Timeout) * time.Second}
-	h.output = &multiOutput{}
+
+	// Enable or disable colors based on TTY detection or user request
+	colorizeOutput := terminal.IsTerminal(int(os.Stdout.Fd())) || conf.ForceTTY
+
+	h.output = &multiOutput{
+		ColorizeOutput: colorizeOutput,
+		LogFormat: LogFormat(conf.LogFormat),
+	}
 
 	entries := parseProcfile(conf.Procfile, conf.PortBase, conf.PortStep)
 	h.procs = make([]*process, 0)
