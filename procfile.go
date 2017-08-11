@@ -13,7 +13,7 @@ type procfileEntry struct {
 }
 
 func parseProcfile(path string, portBase, portStep int) (entries []procfileEntry) {
-	re, _ := regexp.Compile("^(\\w+):\\s+(.+)$")
+	re, _ := regexp.Compile(`^([\w-]+):\s+(.+)$`)
 
 	f, err := os.Open(path)
 	fatalOnErr(err)
