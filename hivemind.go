@@ -9,7 +9,7 @@ import (
 	"time"
 )
 
-const baseColor = 32
+var colors = []int{2, 3, 4, 5, 6, 42, 130, 103, 129, 108}
 
 type hivemindConfig struct {
 	Title              string
@@ -48,7 +48,7 @@ func newHivemind(conf hivemindConfig) (h *hivemind) {
 
 	for i, entry := range entries {
 		if len(procNames) == 0 || stringsContain(procNames, entry.Name) {
-			h.procs = append(h.procs, newProcess(entry.Name, entry.Command, baseColor+i, conf.Root, entry.Port, h.output))
+			h.procs = append(h.procs, newProcess(entry.Name, entry.Command, colors[i%len(colors)], conf.Root, entry.Port, h.output))
 		}
 	}
 

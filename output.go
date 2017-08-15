@@ -71,7 +71,7 @@ func (m *multiOutput) ClosePipe(proc *process) {
 func (m *multiOutput) WriteLine(proc *process, p []byte) {
 	var buf bytes.Buffer
 
-	color := fmt.Sprintf("\033[1;%vm", proc.Color)
+	color := fmt.Sprintf("\033[1;38;5;%vm", proc.Color)
 
 	buf.WriteString(color)
 	buf.WriteString(proc.Name)
