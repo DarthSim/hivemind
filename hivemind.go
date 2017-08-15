@@ -1,8 +1,10 @@
 package main
 
 import (
+	"fmt"
 	"os"
 	"os/signal"
+	"path/filepath"
 	"sync"
 	"time"
 )
@@ -10,6 +12,7 @@ import (
 const baseColor = 32
 
 type hivemindConfig struct {
+	Title              string
 	Procfile           string
 	ProcNames          string
 	Root               string
@@ -18,6 +21,7 @@ type hivemindConfig struct {
 }
 
 type hivemind struct {
+	title       string
 	output      *multiOutput
 	procs       []*process
 	procWg      sync.WaitGroup
@@ -28,6 +32,13 @@ type hivemind struct {
 
 func newHivemind(conf hivemindConfig) (h *hivemind) {
 	h = &hivemind{timeout: time.Duration(conf.Timeout) * time.Second}
+
+	if len(conf.Title) > 0 {
+		h.title = conf.Title
+	} else {
+		h.title = filepath.Base(conf.Root)
+	}
+
 	h.output = &multiOutput{}
 
 	entries := parseProcfile(conf.Procfile, conf.PortBase, conf.PortStep)
@@ -84,6 +95,8 @@ func (h *hivemind) waitForExit() {
 }
 
 func (h *hivemind) Run() {
+	fmt.Printf("\033]0;%s | hivemind\007", h.title)
+
 	h.done = make(chan bool, len(h.procs))
 
 	h.interrupted = make(chan os.Signal)

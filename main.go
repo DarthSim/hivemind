@@ -28,6 +28,7 @@ func main() {
 	app.HideHelp = true
 
 	app.Flags = []cli.Flag{
+		cli.StringFlag{Name: "title, w", Usage: "Specify a title of the application", Destination: &conf.Title},
 		cli.StringFlag{Name: "processes, l", Usage: "Specify process names to launch. Divide names with comma", Destination: &conf.ProcNames},
 		cli.IntFlag{Name: "port, p", Usage: "specify a port to use as the base", Value: 5000, Destination: &conf.PortBase},
 		cli.IntFlag{Name: "port-step, P", Usage: "specify a step to increase port number", Value: 100, Destination: &conf.PortStep},
