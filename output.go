@@ -8,7 +8,7 @@ import (
 	"sync"
 	"syscall"
 
-	"github.com/kr/pty"
+	"github.com/pkg/term/termios"
 )
 
 type ptyPipe struct {
@@ -26,7 +26,7 @@ func (m *multiOutput) openPipe(proc *process) (pipe *ptyPipe) {
 
 	pipe = m.pipes[proc]
 
-	pipe.pty, pipe.tty, err = pty.Open()
+	pipe.pty, pipe.tty, err = termios.Pty()
 	fatalOnErr(err)
 
 	proc.Stdout = pipe.tty
