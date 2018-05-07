@@ -18,6 +18,7 @@ type hivemindConfig struct {
 	Root               string
 	PortBase, PortStep int
 	Timeout            int
+	NoPrefix           bool
 }
 
 type hivemind struct {
@@ -39,7 +40,7 @@ func newHivemind(conf hivemindConfig) (h *hivemind) {
 		h.title = filepath.Base(conf.Root)
 	}
 
-	h.output = &multiOutput{}
+	h.output = &multiOutput{printProcName:!conf.NoPrefix}
 
 	entries := parseProcfile(conf.Procfile, conf.PortBase, conf.PortStep)
 	h.procs = make([]*process, 0)
