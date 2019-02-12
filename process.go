@@ -29,6 +29,8 @@ func newProcess(name, command string, color int, root string, port int, output *
 
 	proc.output.Connect(proc)
 
+	ensureKill(proc)
+
 	return
 }
 
