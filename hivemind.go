@@ -40,7 +40,7 @@ func newHivemind(conf hivemindConfig) (h *hivemind) {
 		h.title = filepath.Base(conf.Root)
 	}
 
-	h.output = &multiOutput{printProcName:!conf.NoPrefix}
+	h.output = &multiOutput{printProcName: !conf.NoPrefix}
 
 	entries := parseProcfile(conf.Procfile, conf.PortBase, conf.PortStep)
 	h.procs = make([]*process, 0)

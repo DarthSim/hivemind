@@ -26,23 +26,27 @@ func main() {
 	app.Author = "Sergey \"DarthSim\" Alexandrovich"
 	app.Email = "darthsim@gmail.com"
 	app.Version = version
-	app.ArgsUsage = "[procfile]"
+	app.ArgsUsage = "[procfile] (Procfile path can be also set with $HIVEMIND_PROCFILE)"
 	app.HideHelp = true
 
 	app.Flags = []cli.Flag{
-		cli.StringFlag{Name: "title, w", Usage: "Specify a title of the application", Destination: &conf.Title},
-		cli.StringFlag{Name: "processes, l", Usage: "Specify process names to launch. Divide names with comma", Destination: &conf.ProcNames},
-		cli.IntFlag{Name: "port, p", EnvVar: "PORT", Usage: "specify a port to use as the base", Value: 5000, Destination: &conf.PortBase},
-		cli.IntFlag{Name: "port-step, P", Usage: "specify a step to increase port number", Value: 100, Destination: &conf.PortStep},
-		cli.StringFlag{Name: "root, d", Usage: "specify a working directory of application. Default: directory containing the Procfile", Destination: &conf.Root},
-		cli.IntFlag{Name: "timeout, t", Usage: "specify the amount of time (in seconds) processes have to shut down gracefully before being brutally killed", Value: 5, Destination: &conf.Timeout},
-		cli.BoolFlag{Name: "no-prefix", Usage: "process names will not be printed if the flag specified", Destination: &conf.NoPrefix},
+		cli.StringFlag{Name: "title, w", EnvVar: "HIVEMIND_TITLE", Usage: "Specify a title of the application", Destination: &conf.Title},
+		cli.StringFlag{Name: "processes, l", EnvVar: "HIVEMIND_PROCESSES", Usage: "Specify process names to launch. Divide names with comma", Destination: &conf.ProcNames},
+		cli.IntFlag{Name: "port, p", EnvVar: "HIVEMIND_PORT,PORT", Usage: "specify a port to use as the base", Value: 5000, Destination: &conf.PortBase},
+		cli.IntFlag{Name: "port-step, P", EnvVar: "HIVEMIND_PORT_STEP", Usage: "specify a step to increase port number", Value: 100, Destination: &conf.PortStep},
+		cli.StringFlag{Name: "root, d", EnvVar: "HIVEMIND_ROOT", Usage: "specify a working directory of application. Default: directory containing the Procfile", Destination: &conf.Root},
+		cli.IntFlag{Name: "timeout, t", EnvVar: "HIVEMIND_TIMEOUT", Usage: "specify the amount of time (in seconds) processes have to shut down gracefully before being brutally killed", Value: 5, Destination: &conf.Timeout},
+		cli.BoolFlag{Name: "no-prefix", EnvVar: "HIVEMIND_NO_PREFIX", Usage: "process names will not be printed if the flag specified", Destination: &conf.NoPrefix},
 	}
 
 	app.Action = func(c *cli.Context) error {
 		switch c.NArg() {
 		case 0:
-			conf.Procfile = "./Procfile"
+			if path := os.Getenv("HIVEMIND_PROCFILE"); len(path) > 0 {
+				conf.Procfile = path
+			} else {
+				conf.Procfile = "./Procfile"
+			}
 		case 1:
 			conf.Procfile = c.Args().First()
 		default:

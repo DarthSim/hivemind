@@ -69,7 +69,17 @@ If `Procfile` isn't located in your working directory, you can specify the path 
 $ hivemind path/to/your/Procfile
 ```
 
-Run `hivemind --help` to see other options.
+Run `hivemind --help` to see other options. Note that every Hivemind option can be set with corresponding environment variable.
+
+### Environment
+
+If you need to set specific environment variables before running a `Procfile`, you can specify them in the `.env` file in the current working directory. The file should contain `variable=value` pairs, one per line:
+
+```
+PATH=$PATH:/additional/path
+PORT=3000
+HIVEMIND_TITLE=my_awsome_app
+```
 
 ## Author
 
