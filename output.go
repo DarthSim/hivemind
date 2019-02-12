@@ -84,6 +84,7 @@ func (m *multiOutput) WriteLine(proc *process, p []byte) {
 
 		buf.WriteString("\033[0m | ")
 	}
+
 	buf.Write(p)
 	buf.WriteByte('\n')
 
