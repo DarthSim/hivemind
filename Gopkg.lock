@@ -2,6 +2,17 @@
 
 
 [[projects]]
+  digest = "1:1f4b55d7c57681ad91b7ce3ac7c8e7b139e6dd2f477c5f87e6a7749d298645dc"
+  name = "github.com/joho/godotenv"
+  packages = [
+    ".",
+    "autoload",
+  ]
+  pruneopts = "UT"
+  revision = "23d116af351c84513e1946b527c88823e476be13"
+  version = "v1.3.0"
+
+[[projects]]
   digest = "1:4f43b3c1b7e44980a5f3c593f8bf0e18844dc44f451a071c93e77e28cf990db6"
   name = "github.com/pkg/term"
   packages = ["termios"]
@@ -27,6 +38,7 @@
   analyzer-name = "dep"
   analyzer-version = 1
   input-imports = [
+    "github.com/joho/godotenv/autoload",
     "github.com/pkg/term/termios",
     "gopkg.in/urfave/cli.v1",
   ]

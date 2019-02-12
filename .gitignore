@@ -4,5 +4,6 @@ Procfile
 tmp/
 dist/
 .idea
+.env
 
 hivemind
