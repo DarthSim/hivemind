@@ -34,6 +34,7 @@ func main() {
 		cli.IntFlag{Name: "port-step, P", Usage: "specify a step to increase port number", Value: 100, Destination: &conf.PortStep},
 		cli.StringFlag{Name: "root, d", Usage: "specify a working directory of application. Default: directory containing the Procfile", Destination: &conf.Root},
 		cli.IntFlag{Name: "timeout, t", Usage: "specify the amount of time (in seconds) processes have to shut down gracefully before being brutally killed", Value: 5, Destination: &conf.Timeout},
+		cli.BoolFlag{Name:"no-prefix", Usage:"process names will not be printed if the flag specified", Destination:&conf.NoPrefix},
 	}
 
 	app.Action = func(c *cli.Context) error {

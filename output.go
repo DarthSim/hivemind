@@ -19,6 +19,7 @@ type multiOutput struct {
 	maxNameLength int
 	mutex         sync.Mutex
 	pipes         map[*process]*ptyPipe
+	printProcName bool
 }
 
 func (m *multiOutput) openPipe(proc *process) (pipe *ptyPipe) {
@@ -71,16 +72,18 @@ func (m *multiOutput) ClosePipe(proc *process) {
 func (m *multiOutput) WriteLine(proc *process, p []byte) {
 	var buf bytes.Buffer
 
-	color := fmt.Sprintf("\033[1;38;5;%vm", proc.Color)
+	if m.printProcName {
+		color := fmt.Sprintf("\033[1;38;5;%vm", proc.Color)
 
-	buf.WriteString(color)
-	buf.WriteString(proc.Name)
+		buf.WriteString(color)
+		buf.WriteString(proc.Name)
 
-	for buf.Len()-len(color) < m.maxNameLength {
-		buf.WriteByte(' ')
+		for buf.Len()-len(color) < m.maxNameLength {
+			buf.WriteByte(' ')
+		}
+
+		buf.WriteString("\033[0m | ")
 	}
-
-	buf.WriteString("\033[0m | ")
 	buf.Write(p)
 	buf.WriteByte('\n')
 

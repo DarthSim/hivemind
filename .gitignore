@@ -3,5 +3,6 @@ _vendor/
 Procfile
 tmp/
 dist/
+.idea
 
 hivemind
