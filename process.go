@@ -29,8 +29,6 @@ func newProcess(name, command string, color int, root string, port int, output *
 
 	proc.output.Connect(proc)
 
-	ensureKill(proc)
-
 	return
 }
 
@@ -61,6 +59,8 @@ func (p *process) Running() bool {
 func (p *process) Run() {
 	p.output.PipeOutput(p)
 	defer p.output.ClosePipe(p)
+
+	ensureKill(p)
 
 	p.writeLine([]byte("\033[1mRunning...\033[0m"))
 
