@@ -1,0 +1,9 @@
+# github.com/joho/godotenv v1.3.0
+github.com/joho/godotenv/autoload
+github.com/joho/godotenv
+# github.com/pkg/term v0.0.0-20160705081919-b1f72af2d630
+github.com/pkg/term/termios
+# golang.org/x/sys v0.0.0-20171119032626-0ac51a24ef1c
+golang.org/x/sys/unix
+# gopkg.in/urfave/cli.v1 v1.19.1
+gopkg.in/urfave/cli.v1

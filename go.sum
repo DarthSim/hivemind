@@ -1,0 +1,8 @@
+github.com/joho/godotenv v1.3.0 h1:Zjp+RcGpHhGlrMbJzXTrZZPrWj+1vfm90La1wgB6Bhc=
+github.com/joho/godotenv v1.3.0/go.mod h1:7hK45KPybAkOC6peb+G5yklZfMxEjkZhHbwpqxOKXbg=
+github.com/pkg/term v0.0.0-20160705081919-b1f72af2d630 h1:ZX/9jeXxcLzjhf1Nld8Xx00p3KaxwHkO/wUmTFldenQ=
+github.com/pkg/term v0.0.0-20160705081919-b1f72af2d630/go.mod h1:eCbImbZ95eXtAUIbLAuAVnBnwf83mjf6QIVH8SHYwqQ=
+golang.org/x/sys v0.0.0-20171119032626-0ac51a24ef1c h1:7jnl1/UyeV4n78VkdIkPQAcGH+hvpRFeGvdVgHozjFc=
+golang.org/x/sys v0.0.0-20171119032626-0ac51a24ef1c/go.mod h1:STP8DvDyc/dI5b8T5hshtkjS+E42TnysNCUPdjciGhY=
+gopkg.in/urfave/cli.v1 v1.19.1 h1:pkwzWQSFerxgLtkdWlnjwOS+Vd7VCp/Kwdn3kmeflXQ=
+gopkg.in/urfave/cli.v1 v1.19.1/go.mod h1:vuBzUtMdQeixQj8LVd+/98pzhxNGQoyuPBlsXHOQNO0=
