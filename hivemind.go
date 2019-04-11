@@ -6,6 +6,7 @@ import (
 	"os/signal"
 	"path/filepath"
 	"sync"
+	"syscall"
 	"time"
 )
 
@@ -101,7 +102,7 @@ func (h *hivemind) Run() {
 	h.done = make(chan bool, len(h.procs))
 
 	h.interrupted = make(chan os.Signal)
-	signal.Notify(h.interrupted, os.Interrupt, os.Kill)
+	signal.Notify(h.interrupted, syscall.SIGINT, syscall.SIGTERM)
 
 	for _, proc := range h.procs {
 		h.runProcess(proc)
