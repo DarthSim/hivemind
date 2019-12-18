@@ -43,7 +43,6 @@ You need Go 1.5 or later to build the project.
 ```bash
 $ go get -u -f github.com/DarthSim/hivemind
 ```
-**Note:** You need to set `GO15VENDOREXPERIMENT=1` to build hivemind with Go 1.5.
 
 **Note:** You can update Hivemind the same way.
 
