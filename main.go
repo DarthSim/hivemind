@@ -6,7 +6,7 @@ import (
 
 	"github.com/urfave/cli"
 
-	_ "github.com/joho/godotenv/autoload"
+	_ "github.com/DarthSim/godotenv/autoload"
 )
 
 const version = "1.0.6"
