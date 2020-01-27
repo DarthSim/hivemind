@@ -26,7 +26,7 @@ func main() {
 	app.Author = "Sergey \"DarthSim\" Alexandrovich"
 	app.Email = "darthsim@gmail.com"
 	app.Version = version
-	app.ArgsUsage = "[procfile] (Procfile path can be also set with $HIVEMIND_PROCFILE)"
+	app.ArgsUsage = "[procfile] (Use '-' to read from stdin, Procfile path can be also set with $HIVEMIND_PROCFILE)"
 	app.HideHelp = true
 
 	app.Flags = []cli.Flag{
