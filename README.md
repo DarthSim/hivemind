@@ -38,10 +38,10 @@ You can download the latest release [here](https://github.com/DarthSim/hivemind/
 
 #### From Source
 
-You need Go 1.5 or later to build the project.
+You need Go 1.11 or later to build the project.
 
 ```bash
-$ go get -u -f github.com/DarthSim/hivemind
+$ GO111MODULE=on go get -u -f github.com/DarthSim/hivemind
 ```
 
 **Note:** You can update Hivemind the same way.
