@@ -2,6 +2,7 @@ package main
 
 import (
 	"bufio"
+	"io"
 	"os"
 	"regexp"
 )
@@ -13,11 +14,19 @@ type procfileEntry struct {
 }
 
 func parseProcfile(path string, portBase, portStep int) (entries []procfileEntry) {
+	var f io.Reader
+	switch path {
+	case "-":
+		f = os.Stdin
+	default:
+		file, err := os.Open(path)
+		fatalOnErr(err)
+		defer file.Close()
+
+		f = file
+	}
+
 	re, _ := regexp.Compile(`^([\w-]+):\s+(.+)$`)
-
-	f, err := os.Open(path)
-	fatalOnErr(err)
-
 	port := portBase
 	names := make(map[string]bool)
 
