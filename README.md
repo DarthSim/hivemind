@@ -62,10 +62,11 @@ To get started, you just need to run Hivemind from your working directory contai
 $ hivemind
 ```
 
-If `Procfile` isn't located in your working directory, you can specify the path to it:
+If `Procfile` isn't located in your working directory, or named it non-standard as `Procfile.dev`, you can specify the path to it: [**Fun Fact:** Name of the `Procfile` is arbitrary and can be anything, although it is a best practice to name it as `Procfile` for sanity]
 
 ```bash
 $ hivemind path/to/your/Procfile
+$ hivemind path/to/your/Procfile.dev
 ```
 
 Run `hivemind --help` to see other options. Note that every Hivemind option can be set with corresponding environment variable.
