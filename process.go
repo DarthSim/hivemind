@@ -17,8 +17,17 @@ type process struct {
 }
 
 func newProcess(name, command string, color int, root string, port int, output *multiOutput) (proc *process) {
+	var commandStr string
+	var argsSlice []string
+
+	commandSlice := strings.Fields(command)
+	commandStr = commandSlice[0]
+	if len(commandSlice) > 1 {
+		argsSlice = commandSlice[1:]
+	}
+
 	proc = &process{
-		exec.Command("/bin/sh", "-c", command),
+		exec.Command(commandStr, argsSlice...),
 		name,
 		color,
 		output,
