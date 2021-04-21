@@ -5,11 +5,9 @@ import (
 	"path/filepath"
 
 	"github.com/urfave/cli"
-
-	_ "github.com/DarthSim/godotenv/autoload"
 )
 
-const version = "1.0.6"
+const version = "1.0.7"
 
 func main() {
 	var (
