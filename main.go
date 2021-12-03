@@ -36,7 +36,8 @@ func main() {
 		cli.IntFlag{Name: "port-step, P", EnvVar: "HIVEMIND_PORT_STEP", Usage: "specify a step to increase port number", Value: 100, Destination: &conf.PortStep},
 		cli.StringFlag{Name: "root, d", EnvVar: "HIVEMIND_ROOT", Usage: "specify a working directory of application. Default: directory containing the Procfile", Destination: &conf.Root},
 		cli.IntFlag{Name: "timeout, t", EnvVar: "HIVEMIND_TIMEOUT", Usage: "specify the amount of time (in seconds) processes have to shut down gracefully before being brutally killed", Value: 5, Destination: &conf.Timeout},
-		cli.BoolFlag{Name: "no-prefix", EnvVar: "HIVEMIND_NO_PREFIX", Usage: "process names will not be printed if the flag specified", Destination: &conf.NoPrefix},
+		cli.BoolFlag{Name: "no-prefix", EnvVar: "HIVEMIND_NO_PREFIX", Usage: "process names will not be printed if the flag is specified", Destination: &conf.NoPrefix},
+		cli.BoolFlag{Name: "print-timestamps, T", EnvVar: "HIVEMIND_PRINT_TIMESTAMPS", Usage: "timestamps will be printed if the flag is specified", Destination: &conf.PrintTimestamps},
 	}
 
 	app.Action = func(c *cli.Context) error {

@@ -6,6 +6,7 @@ import (
 	"os"
 	"sync"
 	"syscall"
+	"time"
 
 	"github.com/pkg/term/termios"
 )
@@ -15,10 +16,11 @@ type ptyPipe struct {
 }
 
 type multiOutput struct {
-	maxNameLength int
-	mutex         sync.Mutex
-	pipes         map[*process]*ptyPipe
-	printProcName bool
+	maxNameLength  int
+	mutex          sync.Mutex
+	pipes          map[*process]*ptyPipe
+	printProcName  bool
+	printTimestamp bool
 }
 
 func (m *multiOutput) openPipe(proc *process) (pipe *ptyPipe) {
@@ -70,17 +72,25 @@ func (m *multiOutput) ClosePipe(proc *process) {
 func (m *multiOutput) WriteLine(proc *process, p []byte) {
 	var buf bytes.Buffer
 
-	if m.printProcName {
+	if m.printProcName || m.printTimestamp {
 		color := fmt.Sprintf("\033[1;38;5;%vm", proc.Color)
 
 		buf.WriteString(color)
-		buf.WriteString(proc.Name)
 
-		for buf.Len()-len(color) < m.maxNameLength {
+		if m.printTimestamp {
+			buf.WriteString(time.Now().Format("15:04:05"))
 			buf.WriteByte(' ')
 		}
 
-		buf.WriteString("\033[0m | ")
+		if m.printProcName {
+			buf.WriteString(proc.Name)
+
+			for i := len(proc.Name); i <= m.maxNameLength; i++ {
+				buf.WriteByte(' ')
+			}
+		}
+
+		buf.WriteString("\033[0m| ")
 	}
 
 	buf.Write(p)
