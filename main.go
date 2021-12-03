@@ -9,7 +9,7 @@ import (
 	_ "github.com/DarthSim/godotenv/autoload"
 )
 
-const version = "1.0.6"
+const version = "1.1.0"
 
 func main() {
 	var (
