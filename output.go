@@ -1,7 +1,6 @@
 package main
 
 import (
-	"bufio"
 	"bytes"
 	"fmt"
 	"os"
@@ -54,11 +53,10 @@ func (m *multiOutput) PipeOutput(proc *process) {
 	pipe := m.openPipe(proc)
 
 	go func(proc *process, pipe *ptyPipe) {
-		scanner := bufio.NewScanner(pipe.pty)
-
-		for scanner.Scan() {
-			m.WriteLine(proc, scanner.Bytes())
-		}
+		scanLines(pipe.pty, func(b []byte) bool {
+			m.WriteLine(proc, b)
+			return true
+		})
 	}(proc, pipe)
 }
 

@@ -1,7 +1,6 @@
 package main
 
 import (
-	"bufio"
 	"io"
 	"os"
 	"regexp"
@@ -30,15 +29,14 @@ func parseProcfile(path string, portBase, portStep int) (entries []procfileEntry
 	port := portBase
 	names := make(map[string]bool)
 
-	scanner := bufio.NewScanner(f)
-	for scanner.Scan() {
-		if len(scanner.Text()) == 0 {
-			continue
+	err := scanLines(f, func(b []byte) bool {
+		if len(b) == 0 {
+			return true
 		}
 
-		params := re.FindStringSubmatch(scanner.Text())
+		params := re.FindStringSubmatch(string(b))
 		if len(params) != 3 {
-			continue
+			return true
 		}
 
 		name, cmd := params[1], params[2]
@@ -51,9 +49,11 @@ func parseProcfile(path string, portBase, portStep int) (entries []procfileEntry
 		entries = append(entries, procfileEntry{name, cmd, port})
 
 		port += portStep
-	}
 
-	fatalOnErr(scanner.Err())
+		return true
+	})
+
+	fatalOnErr(err)
 
 	if len(entries) == 0 {
 		fatal("No entries was found in Procfile")
