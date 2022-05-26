@@ -97,7 +97,7 @@ func (h *hivemind) waitForExit() {
 	}
 }
 
-func (h *hivemind) Run() {
+func (h *hivemind) Run() error {
 	fmt.Printf("\033]0;%s | hivemind\007", h.title)
 
 	h.done = make(chan bool, len(h.procs))
@@ -112,4 +112,12 @@ func (h *hivemind) Run() {
 	go h.waitForExit()
 
 	h.procWg.Wait()
+
+	for _, proc := range h.procs {
+		if proc.ProcessState.ExitCode() > 0 {
+			return fmt.Errorf("%s exited with code %d", proc.Name, proc.ProcessState.ExitCode())
+		}
+	}
+
+	return nil
 }
