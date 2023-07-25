@@ -103,7 +103,7 @@ func (h *hivemind) Run() {
 	h.done = make(chan bool, len(h.procs))
 
 	h.interrupted = make(chan os.Signal)
-	signal.Notify(h.interrupted, syscall.SIGINT, syscall.SIGTERM)
+	signal.Notify(h.interrupted, syscall.SIGINT, syscall.SIGTERM, syscall.SIGHUP)
 
 	for _, proc := range h.procs {
 		h.runProcess(proc)
