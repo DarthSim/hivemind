@@ -6,7 +6,7 @@ import (
 
 	"github.com/urfave/cli"
 
-	_ "github.com/DarthSim/godotenv/autoload"
+	"github.com/DarthSim/godotenv"
 )
 
 const version = "1.1.0"
@@ -16,6 +16,11 @@ func main() {
 		conf hivemindConfig
 		err  error
 	)
+
+	_, skipEnv := os.LookupEnv("HIVEMIND_SKIP_ENV")
+	if !skipEnv {
+		godotenv.Load()
+	}
 
 	app := cli.NewApp()
 
