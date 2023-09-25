@@ -1,4 +1,4 @@
-module github.com/agis/hivemind
+module github.com/clerkinc/hivemind
 
 go 1.12
 
