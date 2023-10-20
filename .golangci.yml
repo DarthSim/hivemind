@@ -1,7 +1,7 @@
 linters:
   fast: true
   enable:
-    - golint
+    - revive
     - govet
     - gosimple
     - goconst
@@ -9,4 +9,3 @@ linters:
     - staticcheck
   disable:
     - errcheck
-
