@@ -1,4 +1,4 @@
-module github.com/clerkinc/hivemind
+module github.com/clerk/hivemind
 
 go 1.12
 
